@@ -6,7 +6,7 @@ const Summary = require('../../app/models/Summary');
 
 async function connect() {
     try {
-        await mongoose.connect('mongodb://127.0.0.1/StudentManagement');
+        await mongoose.connect('mongodb+srv://trancongnhat2608:Bm93vVOmIKDEbqnY@cluster0.lnymnx6.mongodb.net/StudentManagement?retryWrites=true&w=majority');
         console.log('Connect DataBase!!!');
     } catch (error) {
         console.log('Connect failure!!!');
