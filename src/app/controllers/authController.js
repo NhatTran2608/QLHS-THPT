@@ -2,7 +2,6 @@ const User = require('../models/Student');
 const Class = require('../models/Class');
 const UserTeacher = require('../models/Teacher')
 const Summary = require('../models/Summary')
-
 const bcrypt = require("bcrypt");
 
 const authController = {

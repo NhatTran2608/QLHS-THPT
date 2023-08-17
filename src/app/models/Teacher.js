@@ -36,7 +36,6 @@ const Teacher = new Schema(
     },
 );
 
-
 // Add plugins
 mongoose.set('strictQuery', false)
 
