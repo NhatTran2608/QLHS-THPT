@@ -18,6 +18,10 @@ const Teacher = new Schema(
         cccd: { type: String },
         phone: { type: String },
         role:{type: String, default: "GV"},
+        lesson:[{
+            type:mongoose.Schema.Types.ObjectId,
+            ref: 'Document',
+        }],
         form_teacherID: {
             type:mongoose.Schema.Types.ObjectId,
             ref: 'Class',

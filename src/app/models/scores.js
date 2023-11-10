@@ -4,26 +4,28 @@ const mongooseDelete = require('mongoose-delete');
 
 const Schema = mongoose.Schema;
 const Result = new Schema(
-    {   
-        nameSubject: {type: String},
+    {
+        nameSubject: { type: String },
         diemhk1tl: { type: Number },
         diemhk115p: { type: Number },
-        diemhk11t: {type: Number },
-        diemhk1ck: {type: Number },
+        diemhk115pl2: { type: Number },
+        diemhk11t: { type: Number },
+        diemhk1ck: { type: Number },
         diemhk2tl: { type: Number },
         diemhk215p: { type: Number },
-        diemhk21t: {type: Number },
-        diemhk2ck: {type: Number },
-        TBHKI:{type: Number},
-        TBHKII:{type: Number},
-        TBCN:{type: Number},
+        diemhk215pl2: { type: Number },
+        diemhk21t: { type: Number },
+        diemhk2ck: { type: Number },
+        TBHKI: { type: Number },
+        TBHKII: { type: Number },
+        TBCN: { type: Number },
         // conduct: {type: String},
         // rank: {type: String},
-        studentID:{
+        studentID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Student'
         },
-        TeacherScoresID:{
+        TeacherScoresID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Teacher'
         }

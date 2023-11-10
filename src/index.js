@@ -1,15 +1,26 @@
 const path = require('path');
 const express = require('express');
-
 const methodOverride = require('method-override');
 const cors = require('cors');
-
 const route = require('./routes');
 const db = require('./config/db');
 const dotenv = require('dotenv');
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+// UploadFile
+// const cloudinary = require('./util/cloudinary')
+// const multer = require('multer')
+// const { CloudinaryStorage } = require('multer-storage-cloudinary')
+// const storage = new CloudinaryStorage({
+//     cloudinary: cloudinary,
+//     folder: 'FILE',
+//     allowedFormats: ['pdf', 'docx'], 
+//     transformation: [{with: 500, heght: 500, crop: 'limit'}],
+// })
 
+// const upload = multer({
+//     storage: storage,
+// })
 // Connect to DB
 db.connect();
 dotenv.config();

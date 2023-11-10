@@ -1,7 +1,10 @@
+
 const Class = require('../models/Class');
 const Student = require('../models/Student');
 const Teacher = require('../models/Teacher');
-
+const TimeTable = require('../models/TimeTable');
+const Document = require('../models/Documents');
+const cloudinary = require('../../util/cloudinary')
 const teacherControlller = {
 
     async listTeachersubject(req, res) {
@@ -26,7 +29,7 @@ const teacherControlller = {
 
     async oneTeacher(req, res) {
         try {
-            const teacher = await Teacher.findById({ _id: req.params.id }).populate("classID").populate("form_teacherID")
+            const teacher = await Teacher.findById({ _id: req.params.id }).populate("classID").populate("form_teacherID").populate('lesson')
             res.status(200).json(teacher);
         }
         catch (err) {
@@ -34,12 +37,12 @@ const teacherControlller = {
         }
     },
 
-    async updateInfo(req, res){
-        try{
-            const teacher = await Teacher.findByIdAndUpdate({_id: req.params.id}, req.body)
+    async updateInfo(req, res) {
+        try {
+            const teacher = await Teacher.findByIdAndUpdate({ _id: req.params.id }, req.body)
             return res.status(200).json(teacher);
         }
-        catch(err){
+        catch (err) {
             return res.status(500).json(err)
         }
     },
@@ -76,6 +79,7 @@ const teacherControlller = {
             const myClass = await Class.findById(id)
             let indexClass = myClass.teacher.indexOf(teacherId)
             myClass.teacher.splice(indexClass, 1)
+            await TimeTable.deleteMany({ TeacherId: teacherId })
             await teacher.save()
             await myClass.save()
             res.status(200).json(teacher)
@@ -101,7 +105,6 @@ const teacherControlller = {
     },
 
     //Xóa GVCN 
-
     async removeTeacher(req, res) {
         try {
             const teacher = await Teacher.findById(req.body._id)
@@ -111,7 +114,6 @@ const teacherControlller = {
             classid.organizer = undefined
             teacher.save();
             classid.save();
-            console.log(teacher);
             res.status(200).json(teacher);
         }
         catch (err) {
@@ -124,14 +126,76 @@ const teacherControlller = {
         try {
             const teacher = await Teacher.findById({ _id: req.params.id }).populate("form_teacherID")
             res.status(200).json(teacher)
-
         }
         catch (err) {
             res.status(500).json(err);
         }
-    }
+    },
+    async showTimeTable(req, res) {
+        try {
+            const TKB = await TimeTable.find({ TeacherId: req.body.Id }).populate('ClassId', 'nameclass');
+            res.status(200).json(TKB);
+        }
+        catch (err) {
+            res.status(500).json(err)
+        }
+    },
 
+    async uploadFiles(req, res) {
+        try {
+            const file = req.files.map((file) => file.path)
+            const uploadFile = []
+            for (let index of file) {
+                const result = await cloudinary.uploader.upload(index, { resource_type: 'auto' })
+                uploadFile.push({
+                    url: result.secure_url,
+                    publicId: result.public_id,
+                });
+            }
+            const document = await Document.create(req.body);
 
+            document.TeacherID = req.params.id
+            document.linkDoc.push(uploadFile[0].url)
+            document.nameDocument = req.body.valueName
+            const teacher = await Teacher.findById(req.params.id)
+            teacher.lesson.push(document._id)
+            teacher.save()
+            document.save()
+
+            res.status(200).json(document)
+        }
+        catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
+    async showOneDocument(req, res) {
+        try {
+            const document = await Document.findById(req.params.id)
+            return res.status(200).json(document)
+        }
+        catch (err) {
+            return res.status(500).json(err)
+        }
+    },
+
+    async removeFile(req, res) {
+        try {
+            const document = await Document.findById(req.params.id)
+            const teacher = await Teacher.findById(document.TeacherID)
+            for (let index = 0; index < teacher.lesson.length; index++) {
+                if (teacher.lesson[index] == req.params.id) {
+                    teacher.lesson.splice(index, 1);
+                }
+            }
+            teacher.save()
+            await Document.findByIdAndDelete(req.params.id)
+            return res.status(200).send('Delete!!!')
+        }
+        catch (err) {
+            res.status(500).json(err)
+        }
+    },
 }
 
 module.exports = teacherControlller;

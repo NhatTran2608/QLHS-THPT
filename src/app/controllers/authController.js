@@ -8,7 +8,7 @@ const authController = {
   //REGISTER
   registerStudent: async (req, res) => {
     try {
-      const { username, email, password, grade,avatar,
+      const { username, email, password, grade, avatar,
         namsinh, fullname, xa, huyen, phone, gioitinh, myclassID,
         cccd, tp, father, mother, phoneFather, phoneMother, role } = req.body
       const checkUser = await User.findOne({ username: username })
@@ -41,7 +41,7 @@ const authController = {
           grade: grade,
           myclassID: myclassID,
           resultID: summary._id,
-          avatar:avatar,
+          avatar: avatar,
         });
         //Save user to DB
 
@@ -60,7 +60,7 @@ const authController = {
   registerTeacher: async (req, res) => {
     try {
       const { username, email, password,
-        birth, fullname, xa, huyen, phone, sex, subject, form_teacherID,avatar,
+        birth, fullname, xa, huyen, phone, sex, subject, form_teacherID, avatar,
         cccd, tp, role, classID } = req.body
       const checkUser = await UserTeacher.findOne({ username: username })
       if (checkUser) {
@@ -183,7 +183,6 @@ const authController = {
   async changepasswordTeacher(req, res) {
     try {
       const { id } = req.params
-      console.log(req.body);
       const validPassword = await bcrypt.compare(
         req.body.Temp,
         req.body.changepass
